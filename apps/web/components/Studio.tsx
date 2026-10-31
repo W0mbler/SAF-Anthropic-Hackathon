@@ -28,6 +28,7 @@ import type {
 } from "../lib/types";
 import MapCanvas from "./MapCanvas";
 import { RunResults, SolutionStatus } from "./Results";
+import PublishedDemo from "./PublishedDemo";
 const airportNames = {
   PNK: "Supadio",
   PKN: "Iskandar",
@@ -52,6 +53,10 @@ const presets = [
   },
 ];
 export default function Studio() {
+  if (process.env.NEXT_PUBLIC_STATIC_DEMO === "true") return <PublishedDemo />;
+  return <LiveStudio />;
+}
+function LiveStudio() {
   const [locations, setLocations] = useState<Locations>({
     sources: [],
     airports: [],

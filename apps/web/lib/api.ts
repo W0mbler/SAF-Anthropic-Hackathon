@@ -50,6 +50,10 @@ export async function request<T>(
   method = "GET",
   body?: unknown,
 ): Promise<T> {
+  if (process.env.NEXT_PUBLIC_STATIC_DEMO === "true") {
+    const { staticRequest } = await import("./static-api");
+    return staticRequest<T>(path, method, body);
+  }
   if (method !== "GET" && !csrf) await session();
   let response: Response;
   try {
@@ -71,6 +75,10 @@ export async function request<T>(
   return value as T;
 }
 export async function downloadRun(id: string, format: "json" | "csv") {
+  if (process.env.NEXT_PUBLIC_STATIC_DEMO === "true") {
+    const { staticDownload } = await import("./static-api");
+    return staticDownload(id, format);
+  }
   const response = await fetch(`/api/v1/runs/${id}/export?format=${format}`, {
     credentials: "same-origin",
   });

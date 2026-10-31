@@ -298,16 +298,18 @@ export function RunResults({ run }: { run: Run }) {
               {explaining ? "Preparing explanation…" : "Explain this network"}
             </button>
           </div>
-          <label className="ai-consent">
-            <input
-              type="checkbox"
-              checked={useAi}
-              onChange={(e) => setUseAi(e.target.checked)}
-            />{" "}
-            Optional AI: I consent to send this run&apos;s model facts to the
-            configured provider. A deterministic explanation works without a
-            key.
-          </label>
+          {process.env.NEXT_PUBLIC_STATIC_DEMO !== "true" && (
+            <label className="ai-consent">
+              <input
+                type="checkbox"
+                checked={useAi}
+                onChange={(e) => setUseAi(e.target.checked)}
+              />{" "}
+              Optional AI: I consent to send this run&apos;s model facts to the
+              configured provider. A deterministic explanation works without a
+              key.
+            </label>
+          )}
           {explanation && <p className="explanation-text">{explanation}</p>}
         </>
       )}

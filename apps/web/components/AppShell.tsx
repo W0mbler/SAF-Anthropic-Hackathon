@@ -52,7 +52,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           {[
             ["/", "Overview"],
             ["/atlas", "Supply Atlas"],
-            ["/optimize", "Optimise"],
+            [
+              "/optimize",
+              process.env.NEXT_PUBLIC_STATIC_DEMO === "true"
+                ? "Scenarios"
+                : "Optimise",
+            ],
             ["/compare", "Compare"],
             ["/about", "How it works"],
           ].map(([href, label]) => (
@@ -66,7 +71,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
         <div className="account">
-          {value?.user ? (
+          {process.env.NEXT_PUBLIC_STATIC_DEMO === "true" ? (
+            <span className="session-label">
+              Published demo · no account needed
+            </span>
+          ) : value?.user ? (
             <>
               <span className="session-label">
                 <UserRound size={14} />
@@ -102,6 +111,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           )}
         </div>
       </header>
+      {process.env.NEXT_PUBLIC_STATIC_DEMO === "true" && (
+        <div className="connection-banner">
+          GitHub Pages demo: real results calculated during the site build. Live
+          optimisation, account registration and database saves require the
+          Python application.
+        </div>
+      )}
       {error && (
         <div className="connection-banner" role="alert">
           {error}{" "}

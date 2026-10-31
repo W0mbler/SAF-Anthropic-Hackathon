@@ -6,6 +6,23 @@ A decision cockpit for sustainable aviation fuel infrastructure across Kalimanta
 
 This repository contains the application source, not only the original specification ZIP. Results come from a real SciPy/HiGHS mixed-integer linear program. There are no hardcoded facility solutions. The original ZIP and datasets are retained as supplied.
 
+## Free GitHub Pages demonstration
+
+The Pages workflow publishes a static demonstration with the source atlas, three real solver-calculated scenarios, comparisons, deterministic explanations, and JSON/CSV downloads. It runs without a Python service or database and does not offer live solves, accounts or scenario saves. The complete server application remains available through the normal Docker setup below.
+
+Enable **Settings → Pages → Build and deployment → Source → GitHub Actions**. The `Publish GitHub Pages demo` workflow runs on pushes to `main` or through **Actions → Publish GitHub Pages demo → Run workflow**. It calculates the three networks using Python/SciPy, exports Next.js with the repository base path, browser-tests the static files, and deploys only the exported files. The workflow reports the actual published URL after a successful deployment. No hosting payment or external API token is needed for a public repository's Pages site.
+
+Expected project URL after a successful deployment: `https://w0mbler.github.io/SAF-Anthropic-Hackathon/`. Repository settings/API access is separate from Git push permission; selecting the Pages source may require the repository owner.
+
+For local verification:
+
+```bash
+.venv/bin/python scripts/build_pages_data.py
+NEXT_PUBLIC_STATIC_DEMO=true NEXT_PUBLIC_BASE_PATH=/SAF-Anthropic-Hackathon npm --prefix apps/web run build
+```
+
+Serve `apps/web/out` mounted at `/SAF-Anthropic-Hackathon/`, then run the browser check with `PAGES_TEST=1 PLAYWRIGHT_BASE_URL=http://127.0.0.1:3002 npm --prefix e2e test -- pages.spec.ts`. Normal `npm run build` retains the complete server-backed application.
+
 ## Host the complete app on Render
 
 [Deploy to Render](https://render.com/deploy?repo=https://github.com/W0mbler/SAF-Anthropic-Hackathon)

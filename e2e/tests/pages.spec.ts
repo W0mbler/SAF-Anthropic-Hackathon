@@ -1,0 +1,51 @@
+import { readFile } from "node:fs/promises";
+import { expect, test } from "@playwright/test";
+
+test("Pages export supports the atlas, published results, comparisons and downloads without an API", async ({ page }) => {
+  test.skip(!process.env.PAGES_TEST, "Run explicitly against a built static export with PAGES_TEST=1");
+  const base = "/SAF-Anthropic-Hackathon";
+  const apiRequests: string[] = [];
+  const failures: string[] = [];
+  page.on("request", request => { if (new URL(request.url()).pathname.includes("/api/v1")) apiRequests.push(request.url()); });
+  page.on("response", response => { if (response.status() >= 400) failures.push(`${response.status()} ${response.url()}`); });
+  await page.goto(`${base}/`);
+  await expect(page.getByTestId("source-count")).toHaveText("80");
+  await expect(page.getByTestId("airport-count")).toHaveText("4");
+  await expect(page.getByTestId("optimise-network")).toHaveCount(0);
+  await page.getByTestId("published-scenario").selectOption("published-higher");
+  await expect(page.getByTestId("facilities-table")).toBeVisible();
+  const ready = page.waitForEvent("download");
+  await page.getByTestId("export-json").click();
+  const download = await ready;
+  const result = JSON.parse(await readFile((await download.path())!, "utf8"));
+  expect(result.id).toBe("published-higher");
+  expect(result.objective_usd).toBeGreaterThan(0);
+  for (const [airport, demand] of Object.entries(result.input_snapshot.demand)) {
+    const delivered = result.flows.filter((f: {stage:string;to_node_id:string}) => f.stage === "refinery_airport" && f.to_node_id === airport).reduce((a:number,f:{quantity_kt:number}) => a + f.quantity_kt,0);
+    expect(delivered).toBeCloseTo(demand as number,5);
+  }
+  const csvReady=page.waitForEvent("download");
+  await page.getByRole("button",{name:"CSV report"}).click();
+  const csv=await csvReady;
+  const report=await readFile((await csv.path())!,"utf8");
+  expect(report).toContain("farm_depot");
+  expect(report).toContain("refinery_airport");
+  expect(report).not.toContain('"\'-');
+  await page.getByRole("button",{name:"Explain this network"}).click();
+  await expect(page.locator(".explanation-text")).toContainText("260.00 kt");
+  await page.goto(`${base}/compare/`);
+  await page.getByTestId("compare-left").selectOption("published-baseline");
+  await page.getByTestId("compare-right").selectOption("published-higher");
+  await page.getByTestId("compare-submit").click();
+  await expect(page.getByTestId("compare-result")).toBeVisible();
+  await page.getByRole("link",{name:"Supply Atlas",exact:true}).click();
+  await expect(page).toHaveURL(new RegExp(`${base}/atlas/`));
+  await page.setViewportSize({width:390,height:844});
+  await page.getByRole("combobox",{name:/Province/}).selectOption("North Kalimantan");
+  await expect(page.getByTestId("source-count")).toHaveText("2");
+  await page.goto(`${base}/login/`);
+  await expect(page.getByRole("heading",{name:"Published demo"})).toBeVisible();
+  await expect(page.getByRole("textbox")).toHaveCount(0);
+  expect(apiRequests).toEqual([]);
+  expect(failures).toEqual([]);
+});

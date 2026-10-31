@@ -6,6 +6,24 @@ import { ArrowRight, LockKeyhole } from "lucide-react";
 import { request } from "../lib/api";
 import { useSession } from "./AppShell";
 export default function AuthForm({ register = false }: { register?: boolean }) {
+  if (process.env.NEXT_PUBLIC_STATIC_DEMO === "true")
+    return (
+      <div className="page-container">
+        <section className="panel empty-state">
+          <h1>Published demo</h1>
+          <p>
+            GitHub Pages does not run the account API or database. Explore the
+            published scenarios without signing in.
+          </p>
+          <Link className="button primary" href="/optimize">
+            Explore scenarios
+          </Link>
+        </section>
+      </div>
+    );
+  return <LiveAuthForm register={register} />;
+}
+function LiveAuthForm({ register = false }: { register?: boolean }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

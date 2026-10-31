@@ -1,0 +1,19 @@
+# Managed-cloud build override. Supply a combined system + session CA bundle:
+# SAF_BUILD_CA=/etc/ssl/certs/ca-certificates.crt docker compose -f compose.yaml -f compose.cloud.yaml build
+services:
+  api:
+    build:
+      secrets:
+        - proxy_ca
+    volumes:
+      - ${SAF_BUILD_CA:?Set SAF_BUILD_CA to the managed cloud CA bundle path}:/run/proxy-ca.pem:ro
+    environment:
+      SSL_CERT_FILE: /run/proxy-ca.pem
+      REQUESTS_CA_BUNDLE: /run/proxy-ca.pem
+  web:
+    build:
+      secrets:
+        - proxy_ca
+secrets:
+  proxy_ca:
+    file: ${SAF_BUILD_CA:?Set SAF_BUILD_CA to the managed cloud CA bundle path}

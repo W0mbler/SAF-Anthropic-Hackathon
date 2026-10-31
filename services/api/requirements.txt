@@ -1,0 +1,15 @@
+fastapi>=0.115,<1
+uvicorn[standard]>=0.32,<1
+pydantic>=2.10,<3
+sqlalchemy>=2.0,<3
+alembic>=1.14,<2
+psycopg[binary]>=3.2,<4
+argon2-cffi>=23.1,<26
+itsdangerous>=2.2,<3
+numpy>=1.26
+pandas>=2.1
+scipy>=1.13
+httpx>=0.28,<1
+pytest>=8,<10
+ruff>=0.9,<1
+mypy>=1.14,<2

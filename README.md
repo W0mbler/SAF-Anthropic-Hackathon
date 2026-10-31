@@ -6,13 +6,15 @@ A decision cockpit for sustainable aviation fuel infrastructure across Kalimanta
 
 This repository contains the application source, not only the original specification ZIP. Results come from a real SciPy/HiGHS mixed-integer linear program. There are no hardcoded facility solutions. The original ZIP and datasets are retained as supplied.
 
+**Autonomous SG 2026 submission:** [project materials, pitch, demo and judge guide](docs/submission/INDEX.md). [Open the public demonstration](https://w0mbler.github.io/SAF-Anthropic-Hackathon/).
+
 ## Free GitHub Pages demonstration
 
 The Pages workflow publishes a static demonstration with the source atlas, three real solver-calculated scenarios, comparisons, deterministic explanations, and JSON/CSV downloads. It runs without a Python service or database and does not offer live solves, accounts or scenario saves. The complete server application remains available through the normal Docker setup below.
 
 Enable **Settings → Pages → Build and deployment → Source → GitHub Actions**. The `Publish GitHub Pages demo` workflow runs on pushes to `main` or through **Actions → Publish GitHub Pages demo → Run workflow**. It calculates the three networks using Python/SciPy, exports Next.js with the repository base path, browser-tests the static files, and deploys only the exported files. The workflow reports the actual published URL after a successful deployment. No hosting payment or external API token is needed for a public repository's Pages site.
 
-Expected project URL after a successful deployment: `https://w0mbler.github.io/SAF-Anthropic-Hackathon/`. Repository settings/API access is separate from Git push permission; selecting the Pages source may require the repository owner.
+Published demonstration: `https://w0mbler.github.io/SAF-Anthropic-Hackathon/`. The [hosted deployment and site check succeeded](https://github.com/W0mbler/SAF-Anthropic-Hackathon/actions/runs/41172546379). Repository settings/API access is separate from Git push permission; selecting the Pages source may require the repository owner.
 
 For local verification:
 
@@ -236,7 +238,7 @@ See [the demo walkthrough](docs/DEMO_SCRIPT.md). These screenshots were captured
 
 [Mobile Supply Atlas screenshot](docs/screenshots/atlas-mobile.png)
 
-Core model extensions require verified road matrices, legally eligible sites, validated refinery/biomass conversion data, measured demand, lifecycle analysis, and calibrated operating economics. No hosted demo URL or video is claimed.
+Core model extensions require verified road matrices, legally eligible sites, validated refinery/biomass conversion data, measured demand, lifecycle analysis, and calibrated operating economics. The submission materials include a captioned silent recording of the static export; live Python operation is demonstrated separately through Docker.
 
 ### Verified implementation status
 

@@ -23,6 +23,8 @@ Validated on 31 October 2026 in the managed Linux cloud environment using Python
 | Render deployment adapter | **34 passed**, Ruff and mypy passed |
 | Combined Render production image | Built successfully; real PostgreSQL startup, secure cookies, restart and clean shutdown verified |
 | Browser checks against combined image | **3 passed** with 0.5 CPU / 512 MiB limits, including real solves, delayed initial session, accounts, comparison, export and mobile Atlas |
+| Hosted application CI at `56da7b9` | [Succeeded](https://github.com/W0mbler/SAF-Anthropic-Hackathon/actions/runs/41172546289) |
+| Hosted Pages publication and site check at `56da7b9` | [Succeeded](https://github.com/W0mbler/SAF-Anthropic-Hackathon/actions/runs/41172546379) |
 
 Backend checks independently recompute per-source supply limits, depot/refinery mass balances, conversion yield, facility capacities and mutual size exclusivity, distance/unit arithmetic, annual transport and fixed processing costs, present-value factors and the complete objective. They exercise 210 kt and 260 kt scenarios, exclusions, infeasibility, invalid inputs, configured solver limits/gap, feasible-incumbent handling, immutable saved inputs, normalized records, account/guest isolation, CSRF, origin validation, cookie security, session restart persistence, exports and explanation fallbacks.
 
@@ -42,6 +44,10 @@ The additional GitHub Pages export was built with `/SAF-Anthropic-Hackathon` as 
 - The manual development runner received shell syntax checks. The complete production Compose path, rather than the optional host SQLite/Next development runner, received live API/browser verification.
 - GitHub Actions configuration is included. Hosted Actions and public application deployment require their own remote status checks; local test results do not establish either. No new-task environment restoration is claimed.
 - Updated environment installation/start instructions were saved as a configuration draft. Saving a draft does not publish the prepared filesystem snapshot. Review and save the changes in environment settings, then publish the environment to retain the prepared snapshot for later tasks.
+
+## Submission asset checks
+
+Submission assets were prepared for the visible Autonomous SG 2026 BoardingPass fields. The cover's PNG dimensions and size were checked, the brief/deck rendered to one/six PDF pages and were visually reviewed, and the silent H.264 MP4 was checked at 106 seconds / 1280×720. Capture metadata reported no HTTP asset failures. These asset checks are separate from the application tests and do not establish event eligibility or portal submission.
 
 ## Model and data caveats
 

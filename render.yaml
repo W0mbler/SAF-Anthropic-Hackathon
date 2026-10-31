@@ -1,0 +1,38 @@
+# Paid resources: review the current Render prices before creating this Blueprint.
+# This file does not create or charge for anything until you deploy it on Render.
+services:
+  - type: web
+    name: saf-command
+    runtime: docker
+    plan: 0.5c-512mb
+    region: singapore
+    dockerfilePath: ./deploy/render/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/locations
+    autoDeployTrigger: checksPass
+    numInstances: 1
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: saf-command-db
+          property: connectionString
+      - key: SOLVER_TIME_LIMIT_SECONDS
+        value: '20'
+      - key: SOLVER_RELATIVE_GAP
+        value: '0.02'
+      - key: OMP_NUM_THREADS
+        value: '1'
+      - key: OPENBLAS_NUM_THREADS
+        value: '1'
+databases:
+  - name: saf-command-db
+    plan: 0.1c-256mb
+    region: singapore
+    databaseName: safcommand
+    user: safcommand
+    postgresMajorVersion: '16'
+    ipAllowList: []

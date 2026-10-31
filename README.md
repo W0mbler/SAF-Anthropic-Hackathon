@@ -6,6 +6,16 @@ A decision cockpit for sustainable aviation fuel infrastructure across Kalimanta
 
 This repository contains the application source, not only the original specification ZIP. Results come from a real SciPy/HiGHS mixed-integer linear program. There are no hardcoded facility solutions. The original ZIP and datasets are retained as supplied.
 
+## Host the complete app on Render
+
+[Deploy to Render](https://render.com/deploy?repo=https://github.com/W0mbler/SAF-Anthropic-Hackathon)
+
+The included `render.yaml` deploys the Next.js website and Python/FastAPI optimiser together in one Docker web service, with a managed PostgreSQL database. This supports the complete application; GitHub Pages only serves static files and cannot run its Python API or database.
+
+Sign in to Render, connect this repository when prompted, review the web/database plans and their displayed charges, and deploy the Blueprint. These are paid persistent services; this link does not purchase or provision anything until you confirm in Render. The Blueprint generates a session secret, links the database, runs migrations and seeds, and configures the website's HTTPS origin automatically. No AI or map-service key is needed. Render supplies the actual public website URL after deployment.
+
+See [the Render deployment guide](docs/RENDER.md) for configuration, validation and limitations. Local validation of the deployment image does not claim a live Render service has already been created.
+
 ## Run the application
 
 Requirements: Docker Engine and Docker Compose v2, with approximately 4 GB free RAM and Internet access for the first image/dependency build.

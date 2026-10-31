@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Command, LogOut, UserRound } from "lucide-react";
 import { request, session } from "../lib/api";
 import type { Session } from "../lib/types";
@@ -15,9 +15,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [value, setValue] = useState<Session | null>(null);
   const [error, setError] = useState("");
+  const principal = useRef<string | null>(null);
+  const [workspaceVersion, setWorkspaceVersion] = useState(0);
   async function refresh() {
     try {
-      setValue(await session());
+      const next = await session();
+      const identity = next.user?.id || next.csrf_token;
+      // Initial session discovery must preserve forms already being edited.
+      // Later identity changes clear the preceding principal's private state.
+      if (principal.current !== null && principal.current !== identity) {
+        setWorkspaceVersion((version) => version + 1);
+      }
+      principal.current = identity;
+      setValue(next);
       setError("");
     } catch (e) {
       setError((e as Error).message);
@@ -98,9 +108,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <button onClick={() => void refresh()}>Retry connection</button>
         </div>
       )}
-      <main key={value?.user?.id || value?.csrf_token || "initial"}>
-        {children}
-      </main>
+      <main key={workspaceVersion}>{children}</main>
       <footer className="footer">
         <span>
           <span className="guest-dot" /> KALIMANTAN · INDONESIA

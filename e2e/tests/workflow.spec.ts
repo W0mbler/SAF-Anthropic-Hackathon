@@ -98,11 +98,25 @@ test("guest solves real baseline and higher-demand networks, compares and export
 test("account forms register and restore a private account session", async ({ page }) => {
   const email = `browser-${Date.now()}@example.test`;
   const password = "A-real-demo-password-48!";
+  let firstSession = true;
+  await page.route("**/api/v1/auth/me", async (route) => {
+    if (firstSession) {
+      firstSession = false;
+      await new Promise((resolve) => setTimeout(resolve, 600));
+    }
+    await route.continue();
+  });
+  const discovered = page.waitForResponse(
+    (response) => new URL(response.url()).pathname === "/api/v1/auth/me",
+  );
   await page.goto("/register");
   await page.getByLabel(/email/i).fill(email);
   await page.getByLabel(/^password/i).fill(password);
   const name = page.getByLabel(/display name|your name|^name$/i);
   if (await name.count()) await name.fill("Browser tester");
+  await discovered;
+  await expect(page.getByLabel(/email/i)).toHaveValue(email);
+  await expect(page.getByLabel(/^password/i)).toHaveValue(password);
   const registered = page.waitForResponse(
     (response) => response.request().method() === "POST"
       && new URL(response.url()).pathname === "/api/v1/auth/register",

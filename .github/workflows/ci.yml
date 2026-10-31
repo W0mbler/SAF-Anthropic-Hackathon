@@ -17,7 +17,10 @@ jobs:
           cache-dependency-path: services/api/requirements.lock.txt
       - run: pip install -r requirements.lock.txt
       - run: ruff check .
+      - run: ruff check ../../deploy/render
       - run: mypy app
+      - run: mypy ../../deploy/render/start.py
+      - run: pytest -q ../../deploy/render/test_start.py
       - run: pytest -q
         env:
           OMP_NUM_THREADS: '2'

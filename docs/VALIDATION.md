@@ -11,7 +11,7 @@ Validated on 31 October 2026 in the managed Linux cloud environment using Python
 | Backend `mypy app` | Passed, all 9 app modules |
 | Frontend `npm run lint` | Passed, no lint errors or warnings |
 | Frontend `npm run typecheck` | Passed, strict TypeScript |
-| Frontend `npm test` | **9 passed**, Vitest 5.0.5 |
+| Frontend `npm test` | **11 passed**, Vitest 5.0.5, including delayed-session form preservation and identity-change state isolation |
 | Production API and web Docker builds | Passed using the managed CA, with TLS verification enabled |
 | `docker compose up -d --wait --wait-timeout 120` | PostgreSQL, API and web healthy |
 | `python3 scripts/smoke_test.py` | Passed against the rebuilt PostgreSQL-backed API |
@@ -20,12 +20,17 @@ Validated on 31 October 2026 in the managed Linux cloud environment using Python
 | Frozen Python requirements and npm lockfile installs | Passed; Python `pip check` found no conflicts |
 | `npm audit --omit=dev` | 0 reported runtime advisories |
 | Full frontend `npm audit` | 0 high/critical, 16 moderate development-only advisories |
+| Render deployment adapter | **34 passed**, Ruff and mypy passed |
+| Combined Render production image | Built successfully; real PostgreSQL startup, secure cookies, restart and clean shutdown verified |
+| Browser checks against combined image | **3 passed** with 0.5 CPU / 512 MiB limits, including real solves, delayed initial session, accounts, comparison, export and mobile Atlas |
 
 Backend checks independently recompute per-source supply limits, depot/refinery mass balances, conversion yield, facility capacities and mutual size exclusivity, distance/unit arithmetic, annual transport and fixed processing costs, present-value factors and the complete objective. They exercise 210 kt and 260 kt scenarios, exclusions, infeasibility, invalid inputs, configured solver limits/gap, feasible-incumbent handling, immutable saved inputs, normalized records, account/guest isolation, CSRF, origin validation, cookie security, session restart persistence, exports and explanation fallbacks.
 
 The live smoke checks loaded exactly 80 sources totaling 6,800 kt and exactly PNK, PKN, BPN and TRK. Baseline and higher-demand scenarios served all four demands with 1,050 kt and 1,300 kt of biomass input respectively. All three material-flow stages were present. Comparison, saved-run persistence, deterministic explanation, exact JSON/CSV exports and a separate guest's access denial passed.
 
 The browser suite completed real baseline and higher-demand solves, independently checked deliveries and biomass consumption, compared saved runs, downloaded matching JSON, registered/logged out/logged back in, and inspected/filter-selected records in the mobile Atlas at 390 px without horizontal page overflow. Actual screenshots are retained in `docs/screenshots/`. The local MapLibre renderer and SVG fallback use supplied coordinates and local schematic geography; no paid map key is needed.
+
+Render-image testing exposed and fixed an initial-session race that could clear a partially typed sign-up form. The first session discovery now preserves child state; subsequent established-principal changes still clear private workspace state. The regression is covered by component tests and a browser journey with a deliberately delayed real session response. The combined image was run in production mode against an isolated PostgreSQL database, with 0.5 CPU and 512 MiB container limits. This validates the local deployment package, not live Render provisioning, provider billing or external HTTPS setup. See `docs/RENDER.md` for the paid Blueprint and account connection steps.
 
 ## Limits of this verification
 
